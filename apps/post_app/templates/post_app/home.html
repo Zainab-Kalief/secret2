@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      span{
+        color: pink;
+      }
+    </style>
+  </head>
+  <body>
+      {{user_likes}}
+      {{non_likes}}
+    <p><a href="{% url 'users:log_in' %}">Sign Out</a></p>
+    <h1>Hello {{user.first_name}}  {{user.id}}</h1>
+    <p><a href="{% url 'posts:most_likes' %}">Top Secrets</a></p>
+    <form action="{% url 'posts:post_secret' %}" method="post">
+      <p>Post your secret here</p>
+      {% csrf_token %}
+      <textarea name="secret" rows="8" cols="80"></textarea>
+      {% if messages %}
+        {% for message in messages %}
+          {% if 'no_secret' in message.tags %}
+             <p>{{message}}</p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      <input type="submit" value="Post">
+
+      {% for secret in secrets %}
+        {% if secret.user.id == user.id %}
+          <p>{{secret.user.first_name}} said {{secret.secret}} {{secret.created_at}}<a href="{% url 'posts:delete_secret' secret_id=secret.id %}">Delete</a></p>
+        {% else %}
+        {% if user in secret.secret_user_likes %}
+
+            <p>{{secret.user.first_name}} said {{secret.secret}} {{secret.created_at}} <span>{{secret.secret_likes.count}}</span> <a href="">Dislike</a></p>
+        {% else %}
+
+            <p>{{secret.user.first_name}} said {{secret.secret}} {{secret.created_at}} <span>{{secret.secret_likes.count}}</span> <a href="{% url 'posts:add_like' secret_id=secret.id %}">Like</a></p>
+        {% endif %}
+        {% endif %}
+      {% endfor %}
+
+
+
+
+
+    </form>
+  </body>
+</html>

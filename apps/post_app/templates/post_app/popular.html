@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    {% for secret in secrets %}
+    {% if secret.user.id == user.id %}
+      <p>{{secret.secret}} {{secret.created_at}}<a href="{% url 'posts:delete_secret' secret_id=secret.id %}">Delete</a></p>
+    {% else %}
+        <p>{{secret.secret}} {{secret.created_at}} <span>{{secret.secret_likes.count}}</span> <a href="{% url 'posts:add_like' secret_id=secret.id %}">Like</a></p>
+    {% endif %}
+    {% endfor %}
+  </body>
+</html>
